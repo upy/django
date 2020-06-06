@@ -6,18 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posts', '0002_auto_20200601_1846'),
+        ("posts", "0002_auto_20200601_1846"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='slug',
-            field=models.SlugField(null=True),
+            model_name="company", name="slug", field=models.SlugField(null=True),
         ),
         migrations.AddField(
-            model_name='tag',
-            name='slug',
-            field=models.SlugField(null=True),
+            model_name="tag", name="slug", field=models.SlugField(null=True),
         ),
     ]

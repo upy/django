@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 from .models import Post, Company, Tag
 from rest_framework import serializers
 
@@ -5,42 +7,48 @@ from rest_framework import serializers
 class CompanySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Company
-        fields = ['name', 'slug', 'logo', 'www', 'twitter', 'linkedin']
+        fields = ("name", "slug", "logo", "www", "twitter", "linkedin")
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ['name', 'slug']
-
-
-class CreatePostSerializer(serializers.ModelSerializer):
-    description = serializers.CharField(required=True, min_length=4, max_length=100000)
-    position = serializers.CharField(required=False, allow_blank=True, max_length=190)
-
-    apply_url = serializers.CharField(required=False, allow_blank=True, max_length=190)
-    apply_email = serializers.CharField(required=False, allow_blank=True, max_length=190)
-
-    type = serializers.CharField(required=False, allow_blank=True, max_length=190)
-
-    # todo diğer alanlar eklenecek
-
-    class Meta:
-        model = Post
-        fields = ['slug', 'position', 'description', 'apply_url', 'apply_email', 'location', 'type', 'status',
-                  'is_featured', 'pub_date', 'post_url', 'company', 'tags']
-
-    def create(self, validated_data):
-        # todo mail gönderimi yapıalcak
-        post = Post.objects.create(status=0, **validated_data)
-        return post
+        fields = ("name", "slug")
 
 
 class PostSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
     company = CompanySerializer()
+    post_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['slug', 'position', 'description', 'apply_url', 'apply_email', 'location', 'type', 'status',
-                  'is_featured', 'pub_date', 'post_url', 'company', 'tags']
+        fields = (
+            "apply_email",
+            "apply_url",
+            "company",
+            "created_at",
+            "description",
+            "is_featured",
+            "location",
+            "position",
+            "post_url",
+            "slug",
+            "status",
+            "tags",
+            "type",
+            "updated_at",
+        )
+
+
+
+class LocationSerializer(serializers.Serializer):
+    location = serializers.CharField(label=_("Location"))
+
+    class Meta:
+        fields = ("location",)
+
+class CreatePostSerializer(serializers.Serializer):
+    company_email = serializers.EmailField(label=_("E-mail"))
+    company_linkedin = serializers.URLField(label=_("Linkedin"), allow_blank=True)
+    company_name = serializers.CharField(max_length=100, label=_("Company name"))
+    company_twitter = serializers.CharField()

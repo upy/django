@@ -6,43 +6,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posts', '0005_auto_20200601_1909'),
+        ("posts", "0005_auto_20200601_1909"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='activation_code',
+            model_name="post",
+            name="activation_code",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='apply_email',
+            model_name="post",
+            name="apply_email",
             field=models.EmailField(blank=True, max_length=254, null=True),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='apply_url',
+            model_name="post",
+            name="apply_url",
             field=models.URLField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='notes',
+            model_name="post",
+            name="notes",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='renewal_code',
+            model_name="post",
+            name="renewal_code",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='status',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'DISAPPROVED'), (1, 'APPROVED'), (2, 'UNPUBLISHED')]),
+            model_name="post",
+            name="status",
+            field=models.PositiveSmallIntegerField(
+                choices=[(0, "DISAPPROVED"), (1, "APPROVED"), (2, "UNPUBLISHED")]
+            ),
         ),
         migrations.AlterField(
-            model_name='tag',
-            name='slug',
+            model_name="tag",
+            name="slug",
             field=models.SlugField(blank=True, null=True),
         ),
     ]

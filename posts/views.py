@@ -1,47 +1,36 @@
-from .models import Post, Company, Tag
-from .serializers import PostSerializer, CompanySerializer, TagSerializer, CreatePostSerializer
+from django.db.models import Count
+from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-from .filters import PeriodFilterBackend, StatusFilterBackend
+
+from .enums import PostStatuses
+from .filters import PostFilter, PostSearchFilter
+from .models import Post
+from .serializers import (
+    PostSerializer,
+    LocationSerializer,
+)
 
 
-class CompaniesView(ListAPIView):
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['name']
-    ordering_fields = ['id', 'name', 'created_at']
-
-
-class PostsView(ListAPIView):
-    queryset = Post.objects.all()
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(status=PostStatuses.APPROVED.value)
     serializer_class = PostSerializer
-    filter_backends = [StatusFilterBackend, PeriodFilterBackend, DjangoFilterBackend,
-                       filters.SearchFilter, filters.OrderingFilter]
+    filterset_class = PostFilter
 
-    search_fields = ['is_featured', 'location', 'type', 'position', 'tags']
-    ordering_fields = ['pub_date', 'created_at']
-
-
-class CreatePostsView(CreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = CreatePostSerializer
-
-
-class TagsView(ListAPIView):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['name']
+    @action(detail=False, methods=["get"])
+    def locations(self, request):
+        queryset = super().get_queryset()
+        queryset = (
+            queryset.values("location")
+                .annotate(count=Count("location"))
+                .order_by("-count")
+        )
+        data = LocationSerializer(queryset, many=True).data
+        return Response(data=data)
 
 
-class FindLocationAction(APIView):
-    def get(self, request):
-        locations = Post.objects.all().distinct('location')
-        data = {}
-        for location in locations:
-            data[location.id] = location.location
-        return Response(data)
+class PostSearchViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Post.objects.filter(status=PostStatuses.APPROVED.value)
+    serializer_class = PostSerializer
+    filterset_class = PostSearchFilter
+

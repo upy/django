@@ -7,22 +7,29 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Company',
+            name="Company",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('email', models.EmailField(max_length=254)),
-                ('logo', models.ImageField(upload_to='')),
-                ('www', models.URLField()),
-                ('twitter', models.CharField(max_length=15)),
-                ('linkedin', models.URLField()),
-                ('pub_date', models.DateTimeField()),
-                ('created_at', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("email", models.EmailField(max_length=254)),
+                ("logo", models.ImageField(upload_to="")),
+                ("www", models.URLField()),
+                ("twitter", models.CharField(max_length=15)),
+                ("linkedin", models.URLField()),
+                ("pub_date", models.DateTimeField()),
+                ("created_at", models.DateTimeField()),
             ],
         ),
     ]

@@ -1,16 +1,14 @@
-from rest_framework import filters
+from django.utils.translation import gettext_lazy as _
+from django_filters import rest_framework as filters
 from datetime import timedelta, datetime
 
-
-class StatusFilterBackend(filters.BaseFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        return queryset.filter(**{"status": 1})
+from posts.enums import Periods
 
 
-class PeriodFilterBackend(filters.BaseFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        if 'period' in request.query_params:
-            period = request.GET.get('period')
+class PostFilter(filters.FilterSet):
+    period = filters.ChoiceFilter(label=_("Period"), choices=Periods.choices)
+
+    def filter_period(self, *args, **kwargs):
 
             if period == 'daily':
                 return queryset.filter(**{"pub_date": datetime.today()})
@@ -20,3 +18,9 @@ class PeriodFilterBackend(filters.BaseFilterBackend):
                 return queryset.filter(**{"pub_date__gt": datetime.today() - timedelta(days=30)})
         else:
             return queryset
+
+class PostSearchFilter(filters.FilterSet):
+    query = filters.CharFilter(label=_("Query"), method="filter_query")
+
+    def filter_query(self, *args, **kwargs):
+        import ipdb;ipdb.set_trace()

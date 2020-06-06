@@ -6,13 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('posts', '0006_auto_20200601_1931'),
+        ("posts", "0006_auto_20200601_1931"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='type',
-            field=models.PositiveSmallIntegerField(choices=[(1, 'TAM ZAMANLI'), (2, 'YARI ZAMANLI'), (3, 'STAJYER'), (4, 'FREELANCE')]),
+            model_name="post",
+            name="type",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (1, "TAM ZAMANLI"),
+                    (2, "YARI ZAMANLI"),
+                    (3, "STAJYER"),
+                    (4, "FREELANCE"),
+                ]
+            ),
         ),
     ]
